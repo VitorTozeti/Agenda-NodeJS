@@ -1,0 +1,39 @@
+{
+  "Tarefas": [
+    {
+      "name": "Fazer portfólio",
+      "details": "Criar um site com projetos.",
+      "completed": false,
+      "subtasks": [
+        {
+          "name": "Escolher projetos",
+          "completed": true
+        },
+        {
+          "name": "Criar layout",
+          "completed": false
+        }
+      ]
+    },
+    {
+      "name": "Melhorar o Curriculo da minha mãe",
+      "details": "Melhor o curriculo profissional da minha mae",
+      "completed": true,
+      "subtasks": [
+        {
+          "name": "Mais cursos rápidos",
+          "completed": true
+        },
+        {
+          "name": "Melhorar Formatação",
+          "completed": true
+        },
+        {
+          "name": "Oque fazer sobre o tempo fora do trabalho",
+          "completed": true
+        }
+      ],
+      "deadline": "2025-06-25"
+    }
+  ]
+}
