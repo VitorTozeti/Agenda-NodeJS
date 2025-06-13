@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Agenda de Tarefas por Dia</title>
+    <style>
+        /* Reset básico */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #231651;
+            margin: 20px;
+            color: #231651;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2374AB;
+            letter-spacing: 1px;
+        }
+
+        table {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto 40px auto;
+            border-collapse: collapse;
+            box-shadow: 0 2px 10px rgb(0 0 0 / 0.1);
+            background: #D6FFF6;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #2374AB;
+            text-align: left;
+        }
+
+        th {
+            background: #2374AB;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        td {
+            cursor: pointer;
+            transition: background-color 0.5s ease;
+        }
+
+        td:hover {
+            background-color: #4DCCBD;
+        }
+
+        .incomplete {
+            color: #FF8484;
+            font-weight: 700;
+        }
+
+        .complete {
+            color: #2374AB;
+            font-weight: 700;
+        }
+
+        #taskPanel {
+            max-width: 700px;
+            margin: 0 auto;
+            background: #D6FFF6;
+            padding: 20px 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px rgb(0 0 0 / 0.15);
+        }
+
+        #taskPanel h2 {
+            margin-top: 0;
+            color: #2374AB;
+            border-bottom: 2px solid #2374AB;
+            padding-bottom: 6px;
+        }
+
+        #taskList {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 25px;
+        }
+
+        #taskList li {
+            background: #D6FFF6;
+            margin-bottom: 12px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 4px rgb(0 0 0 / 0.1);
+        }
+
+        #taskList li strong {
+            font-size: 1.1rem;
+            display: inline-block;
+            margin-right: 12px;
+        }
+
+        #taskList li p {
+            margin: 8px 0 12px 0;
+            font-size: 0.9rem;
+            color: #231651;
+            white-space: pre-wrap;
+        }
+
+        #taskList ul {
+            padding-left: 20px;
+            margin-top: 0;
+            margin-bottom: 12px;
+        }
+
+        #taskList ul li {
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+        }
+
+        #taskList button {
+            background-color: #2374AB;
+            border: none;
+            color: white;
+            padding: 7px 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.2s ease;
+        }
+
+        #taskList button:hover {
+            background-color: #4DCCBD;
+        }
+
+        form {
+            max-width: 700px;
+            margin: 0 auto;
+            background: #D6FFF6;
+            padding: 20px 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px rgb(0 0 0 / 0.15);
+            margin-bottom: 40px;
+        }
+
+        form h3 {
+            margin-top: 0;
+            color: #2374AB;
+            margin-bottom: 15px;
+        }
+
+        form input[type="text"],
+        form textarea,
+        form input[type="date"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1.5px solid #2374AB;
+            border-radius: 6px;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            resize: vertical;
+            transition: border-color 0.2s ease;
+            background-color: #ffffff;
+            color: #231651;
+        }
+
+        form input[type="text"]:focus,
+        form textarea:focus,
+        form input[type="date"]:focus {
+            outline: none;
+            border-color: #4DCCBD;
+            background-color: #D6FFF6;
+        }
+
+        form button {
+            background-color: #2374AB;
+            border: none;
+            color: white;
+            padding: 12px 22px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: background-color 0.2s ease;
+        }
+
+        form button:hover {
+            background-color: #4DCCBD;
+        }
+
+        /* Barra de progresso horizontal para a % de subtarefas */
+        .progress-bar-container {
+            background-color: #231651;
+            border-radius: 12px;
+            height: 14px;
+            width: 100%;
+            margin-top: 10px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.2);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: #4DCCBD;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 0.85rem;
+            margin-top: 4px;
+            font-weight: 600;
+            color: #231651;
+        }
+    </style>
+
+    </style>
+</head>
+
+<body>
+    <h1>Minha Agenda</h1>
+
+    <table id="calendar">
+        <thead>
+            <tr>
+                <th>Dia</th>
+                <th>Status</th>
+                <th>Tarefas</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+
+    <div id="taskPanel">
+        <h2 id="selectedDateTitle"></h2>
+        <ul id="taskList"></ul>
+
+        <form id="newTaskForm" onsubmit="event.preventDefault(); addTask();">
+            <h3>Nova Tarefa</h3>
+            <input type="text" id="taskName" placeholder="Nome da tarefa" required />
+            <textarea id="taskDetails" placeholder="Detalhes..." rows="3"></textarea>
+            <label for="taskDeadline">Data de entrega:</label>
+            <input type="date" id="taskDeadline" required />
+            <button type="submit">Adicionar Tarefa</button>
+        </form>
+    </div>
+
+    <script>
+        let selectedDate = '';
+
+        // Carregar os dias com tarefas
+        // Modifique a função loadDays() assim:
+        function loadDays() {
+            fetch('/api/days')
+                .then(response => response.json())
+                .then(days => {
+                    const tbody = document.querySelector('#calendar tbody');
+                    tbody.innerHTML = '';
+
+                    if (days.length === 0) {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `<td colspan="3" style="text-align:center; color:#777;">Nenhum dia com tarefas</td>`;
+                        tbody.appendChild(tr);
+                        return;
+                    }
+
+                    days.forEach(date => {
+                        fetch(`/api/tasks/${date}`)
+                            .then(res => res.json())
+                            .then(tasks => {
+                                tasks.forEach((task, taskIndex) => {
+                                    const tr = document.createElement('tr');
+                                    const subtaskRow = document.createElement('tr');
+                                    subtaskRow.id = `subtasks-${date}-${taskIndex}`;
+                                    subtaskRow.style.display = 'none';
+                                    subtaskRow.className = 'subtask-row';
+
+                                    // Calcular progresso das subtarefas
+                                    const totalSubtasks = task.subtasks?.length || 0;
+                                    const completedSubtasks = task.subtasks?.filter(st => st.completed).length || 0;
+                                    const progressText = totalSubtasks > 0 ?
+                                        `${completedSubtasks}/${totalSubtasks} subtarefas` :
+                                        'Sem subtarefas';
+
+                                    tr.innerHTML = `
+                                <td onclick="openDay('${date}')" style="cursor:pointer; color:#1565c0; text-decoration: underline;">
+                                    ${date}
+                                </td>
+                                <td class="${task.completed ? 'complete' : 'incomplete'}">
+                                    ${task.completed ? '✅ Completa' : '⚠️ Incompleta'}
+                                </td>
+                                <td>
+                                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                                        <div>
+                                            <strong>${task.name}</strong><br>
+                                            ${progressText}
+                                        </div>
+                                        <button onclick="toggleSubtasks('${date}', ${taskIndex})" 
+                                                style="background:#4caf50; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;">
+                                            Mostrar Subtarefas
+                                        </button>
+                                    </div>
+                                </td>
+                            `;
+
+                                    // Linha das subtarefas
+                                    subtaskRow.innerHTML = `
+                                <td colspan="3" style="padding-left:40px; background:#f9f9f9;">
+                                    <ul style="margin:5px 0; padding-left:20px;">
+                                        ${(task.subtasks || []).map((subtask, i) => `
+                                            <li style="list-style-type: ${subtask.completed ? '"✓"' : '"✗"'}; 
+                                                        color: ${subtask.completed ? '#2e7d32' : '#d32f2f'};">
+                                                ${subtask.name}
+                                            </li>
+                                        `).join('')}
+                                    </ul>
+                                </td>
+                            `;
+
+                                    tbody.appendChild(tr);
+                                    tbody.appendChild(subtaskRow);
+                                });
+                            });
+                    });
+                });
+        }
+
+        // Adicione esta nova função para mostrar/ocultar subtarefas
+        function toggleSubtasks(date, taskIndex) {
+            const subtaskRow = document.getElementById(`subtasks-${date}-${taskIndex}`);
+            const button = event.target;
+
+            if (subtaskRow.style.display === 'none') {
+                subtaskRow.style.display = 'table-row';
+                button.textContent = 'Ocultar Subtarefas';
+            } else {
+                subtaskRow.style.display = 'none';
+                button.textContent = 'Mostrar Subtarefas';
+            }
+
+            // Fechar outras subtarefas abertas
+            document.querySelectorAll('.subtask-row').forEach(row => {
+                if (row.id !== `subtasks-${date}-${taskIndex}`) {
+                    row.style.display = 'none';
+                    const otherButton = row.previousElementSibling.querySelector('button');
+                    if (otherButton) otherButton.textContent = 'Mostrar Subtarefas';
+                }
+            });
+        }
+
+        // Adicione este CSS para melhorar a aparência
+        const style = document.createElement('style');
+        style.textContent = `
+    .subtask-row {
+        transition: all 0.3s ease;
+    }
+    .subtask-row ul {
+        padding-left: 20px;
+    }
+    .subtask-row li {
+        padding: 3px 0;
+    }
+`;
+        document.head.appendChild(style);
+
+
+        // Abrir tarefas de um dia
+        function openDay(date) {
+            selectedDate = date;
+            document.getElementById('taskPanel').style.display = 'block';
+            document.getElementById('selectedDateTitle').innerText = `Todas as ${date}`;
+            loadTasks();
+        }
+
+        // Carregar tarefas de um dia
+        function loadTasks() {
+            fetch(`/api/tasks/${selectedDate}`)
+                .then(res => res.json())
+                .then(tasks => {
+                    const list = document.getElementById('taskList');
+                    list.innerHTML = '';
+                    if (tasks.length === 0) {
+                        list.innerHTML = '<li style="color:#777; font-style: italic;">Nenhuma tarefa cadastrada para esse dia.</li>';
+                        return;
+                    }
+                    tasks.forEach((task, index) => {
+                        // Calcular % subtarefas completas
+                        const totalSubtasks = task.subtasks?.length || 0;
+                        const completedSubtasks = task.subtasks?.filter(st => st.completed).length || 0;
+                        const percentComplete = totalSubtasks ? Math.round((completedSubtasks / totalSubtasks) * 100) : (task.completed ? 100 : 0);
+
+                        const li = document.createElement('li');
+                        li.innerHTML = `
+                            <strong>${task.name}</strong> 
+                            (${task.deadline ? new Date(task.deadline).toLocaleDateString('pt-BR') : 'Sem prazo'}) - ${task.completed ? '✅ Completa' : '❌ Incompleta'}
+                            <p>${task.details || ''}</p>
+
+                            <ul>
+                                ${(task.subtasks || []).map((st, i) => `
+                                    <li>
+                                        <input type="checkbox" ${st.completed ? 'checked' : ''} onchange="toggleSubtask(${index}, ${i})" id="st-${index}-${i}">
+                                        <label for="st-${index}-${i}">${st.name}</label>
+                                    </li>
+                                `).join('')}
+                            </ul>
+
+                            <div class="progress-bar-container" title="Progresso da tarefa">
+                                <div class="progress-bar" style="width: ${percentComplete}%;"></div>
+                            </div>
+                            <div class="progress-text">${percentComplete}% completo</div>
+
+                            <button onclick="toggleTask(${index})">Marcar como ${task.completed ? 'Incompleta' : 'Completa'}</button>
+                            <button onclick="showAddSubtaskForm(${index})" style="margin-left:10px; background:#4caf50;">Adicionar Subtarefa</button>
+
+                            <div id="addSubtaskForm-${index}" style="display:none; margin-top:10px;">
+                                <input type="text" id="subtaskName-${index}" placeholder="Nome da subtarefa" style="width: 70%; padding: 6px; border-radius: 5px; border: 1px solid #ccc;">
+                                <button onclick="addSubtask(${index})" style="background:#388e3c; color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer;">Adicionar</button>
+                            </div>
+                        `;
+                        list.appendChild(li);
+                    });
+                });
+        }
+
+        // Adicionar nova tarefa
+        function addTask() {
+            const name = document.getElementById('taskName').value.trim();
+            const details = document.getElementById('taskDetails').value.trim();
+            const deadline = document.getElementById('taskDeadline').value;
+
+            if (!name) return alert('Digite um nome para a tarefa.');
+            if (!deadline) return alert('Escolha uma data de entrega.');
+
+            const newTask = {
+                name,
+                details,
+                completed: false,
+                subtasks: [],
+                deadline
+            };
+
+            fetch(`/api/tasks/${selectedDate}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newTask)
+            }).then(() => {
+                document.getElementById('taskName').value = '';
+                document.getElementById('taskDetails').value = '';
+                document.getElementById('taskDeadline').value = '';
+                loadTasks();
+                loadDays();
+            });
+        }
+
+        // Marcar tarefa como completa/incompleta
+        function toggleTask(index) {
+            fetch(`/api/tasks/${selectedDate}`)
+                .then(res => res.json())
+                .then(tasks => {
+                    const task = tasks[index];
+                    task.completed = !task.completed;
+
+                    fetch(`/api/tasks/${selectedDate}/${index}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(task)
+                    }).then(() => {
+                        loadTasks();
+                        loadDays();
+                    });
+                });
+        }
+
+        // Mostrar formulário para adicionar subtarefa
+        function showAddSubtaskForm(taskIndex) {
+            const form = document.getElementById(`addSubtaskForm-${taskIndex}`);
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Adicionar subtarefa
+        function addSubtask(taskIndex) {
+            const input = document.getElementById(`subtaskName-${taskIndex}`);
+            const subtaskName = input.value.trim();
+            if (!subtaskName) return alert('Digite o nome da subtarefa.');
+
+            fetch(`/api/tasks/${selectedDate}`)
+                .then(res => res.json())
+                .then(tasks => {
+                    const task = tasks[taskIndex];
+                    task.subtasks = task.subtasks || [];
+                    task.subtasks.push({ name: subtaskName, completed: false });
+
+                    fetch(`/api/tasks/${selectedDate}/${taskIndex}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(task)
+                    }).then(() => {
+                        input.value = '';
+                        showAddSubtaskForm(taskIndex);
+                        loadTasks();
+                    });
+                });
+        }
+
+        // Marcar subtask como completa/incompleta
+        function toggleSubtask(taskIndex, subtaskIndex) {
+            fetch(`/api/tasks/${selectedDate}`)
+                .then(res => res.json())
+                .then(tasks => {
+                    const subtask = tasks[taskIndex].subtasks[subtaskIndex];
+                    subtask.completed = !subtask.completed;
+
+                    fetch(`/api/tasks/${selectedDate}/${taskIndex}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(tasks[taskIndex])
+                    }).then(() => loadTasks());
+                });
+        }
+
+        loadDays();
+    </script>
+</body>
+
+</html>
