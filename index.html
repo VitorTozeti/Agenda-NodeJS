@@ -5,7 +5,6 @@
     <meta charset="UTF-8" />
     <title>Agenda de Tarefas por Dia</title>
     <style>
-        /* Reset básico */
         * {
             box-sizing: border-box;
         }
@@ -192,7 +191,6 @@
             background-color: #4DCCBD;
         }
 
-        /* Barra de progresso horizontal para a % de subtarefas */
         .progress-bar-container {
             background-color: #231651;
             border-radius: 12px;
@@ -253,8 +251,6 @@
     <script>
         let selectedDate = '';
 
-        // Carregar os dias com tarefas
-        // Modifique a função loadDays() assim:
         function loadDays() {
             fetch('/api/days')
                 .then(response => response.json())
@@ -280,7 +276,6 @@
                                     subtaskRow.style.display = 'none';
                                     subtaskRow.className = 'subtask-row';
 
-                                    // Calcular progresso das subtarefas
                                     const totalSubtasks = task.subtasks?.length || 0;
                                     const completedSubtasks = task.subtasks?.filter(st => st.completed).length || 0;
                                     const progressText = totalSubtasks > 0 ?
@@ -308,7 +303,6 @@
                                 </td>
                             `;
 
-                                    // Linha das subtarefas
                                     subtaskRow.innerHTML = `
                                 <td colspan="3" style="padding-left:40px; background:#f9f9f9;">
                                     <ul style="margin:5px 0; padding-left:20px;">
@@ -330,7 +324,6 @@
                 });
         }
 
-        // Adicione esta nova função para mostrar/ocultar subtarefas
         function toggleSubtasks(date, taskIndex) {
             const subtaskRow = document.getElementById(`subtasks-${date}-${taskIndex}`);
             const button = event.target;
@@ -343,7 +336,6 @@
                 button.textContent = 'Mostrar Subtarefas';
             }
 
-            // Fechar outras subtarefas abertas
             document.querySelectorAll('.subtask-row').forEach(row => {
                 if (row.id !== `subtasks-${date}-${taskIndex}`) {
                     row.style.display = 'none';
@@ -353,7 +345,6 @@
             });
         }
 
-        // Adicione este CSS para melhorar a aparência
         const style = document.createElement('style');
         style.textContent = `
     .subtask-row {
@@ -369,7 +360,6 @@
         document.head.appendChild(style);
 
 
-        // Abrir tarefas de um dia
         function openDay(date) {
             selectedDate = date;
             document.getElementById('taskPanel').style.display = 'block';
@@ -377,7 +367,6 @@
             loadTasks();
         }
 
-        // Carregar tarefas de um dia
         function loadTasks() {
             fetch(`/api/tasks/${selectedDate}`)
                 .then(res => res.json())
@@ -389,7 +378,6 @@
                         return;
                     }
                     tasks.forEach((task, index) => {
-                        // Calcular % subtarefas completas
                         const totalSubtasks = task.subtasks?.length || 0;
                         const completedSubtasks = task.subtasks?.filter(st => st.completed).length || 0;
                         const percentComplete = totalSubtasks ? Math.round((completedSubtasks / totalSubtasks) * 100) : (task.completed ? 100 : 0);
@@ -427,7 +415,6 @@
                 });
         }
 
-        // Adicionar nova tarefa
         function addTask() {
             const name = document.getElementById('taskName').value.trim();
             const details = document.getElementById('taskDetails').value.trim();
@@ -457,7 +444,6 @@
             });
         }
 
-        // Marcar tarefa como completa/incompleta
         function toggleTask(index) {
             fetch(`/api/tasks/${selectedDate}`)
                 .then(res => res.json())
@@ -476,13 +462,11 @@
                 });
         }
 
-        // Mostrar formulário para adicionar subtarefa
         function showAddSubtaskForm(taskIndex) {
             const form = document.getElementById(`addSubtaskForm-${taskIndex}`);
             form.style.display = form.style.display === 'none' ? 'block' : 'none';
         }
 
-        // Adicionar subtarefa
         function addSubtask(taskIndex) {
             const input = document.getElementById(`subtaskName-${taskIndex}`);
             const subtaskName = input.value.trim();
@@ -507,7 +491,6 @@
                 });
         }
 
-        // Marcar subtask como completa/incompleta
         function toggleSubtask(taskIndex, subtaskIndex) {
             fetch(`/api/tasks/${selectedDate}`)
                 .then(res => res.json())
